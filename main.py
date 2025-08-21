@@ -39,10 +39,8 @@ async def scheduler():
 
 
 if __name__ == "__main__":
-    if TG_PROVIDER:
-        provider = TelegramProvider()
 
     asyncio.run(scheduler())
 
     if TG_PROVIDER:
-        provider.application.run_polling()
+        provider = TelegramProvider()
