@@ -1,6 +1,7 @@
 import os
 import logging
 import asyncio
+from dotenv import load_dotenv
 import requests
 from datetime import timedelta
 from providers.telegramProvider import TelegramProvider
@@ -34,13 +35,17 @@ async def health_check():
 
 async def scheduler():
     while True:
-        await asyncio.sleep(timedelta(seconds=float(UPDATE_CHECK_SECONDS)))
+        await asyncio.sleep(
+            timedelta(seconds=float(UPDATE_CHECK_SECONDS)).total_seconds()
+        )
         asyncio.create_task(health_check())
 
 
 if __name__ == "__main__":
+    if TG_PROVIDER:
+        provider = TelegramProvider()
 
     asyncio.run(scheduler())
 
     if TG_PROVIDER:
-        provider = TelegramProvider()
+        provider.application.run_polling()
