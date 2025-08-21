@@ -1,7 +1,6 @@
 import os
 import logging
 import asyncio
-from dotenv import load_dotenv
 import requests
 from datetime import timedelta
 from providers.telegramProvider import TelegramProvider
@@ -29,7 +28,6 @@ async def health_check():
         services.remove(CHECK_URL)
     else:
         return
-
     await provider.send_report(msg)
 
 
