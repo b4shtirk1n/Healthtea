@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from dotenv import load_dotenv
 from telegram.ext import Application
 
+
 if os.path.exists(".env"):
     load_dotenv(".env")
 
