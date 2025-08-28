@@ -23,6 +23,8 @@ services = {CHECK_URL}
 async def health_check():
     if 200 < requests.get(CHECK_URL).status_code >= 400:
         msg = f"{CHECK_URL} is down!"
+        if CHECK_URL not in services:
+            services.add(CHECK_URL)
     elif CHECK_URL in services:
         msg = f"{CHECK_URL} is alive!"
         services.remove(CHECK_URL)
