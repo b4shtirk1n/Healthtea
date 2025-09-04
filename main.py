@@ -20,7 +20,9 @@ services = {CHECK_URL}
 
 
 async def health_check():
-    if 200 < requests.get(CHECK_URL).status_code >= 400:
+    response = requests.get(CHECK_URL)
+    logger.info(response.status_code)
+    if 200 < response.status_code >= 400:
         logger.info("is down")
         msg = f"{CHECK_URL} is down!"
         if CHECK_URL not in services:
