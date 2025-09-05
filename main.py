@@ -17,22 +17,29 @@ CHECK_URL = os.getenv("CHECK_URL")
 TG_PROVIDER = os.getenv("TG_PROVIDER")
 
 services = {CHECK_URL}
+retry = 0
 
 
 async def health_check():
+    global retry
     response = requests.get(CHECK_URL)
     logger.info(response.status_code)
     if 200 < response.status_code >= 400:
-        logger.info("is down")
+        if retry < 3:
+            retry += 1
+            return
+
         msg = f"{CHECK_URL} is down!"
         if CHECK_URL not in services:
             services.add(CHECK_URL)
     elif CHECK_URL in services:
-        logger.info("is alive")
         msg = f"{CHECK_URL} is alive!"
         services.remove(CHECK_URL)
+        retry = 0
     else:
         return
+
+    logger.info(msg)
     await provider.send_report(msg)
 
 
