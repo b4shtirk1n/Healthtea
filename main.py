@@ -43,9 +43,7 @@ async def health_check():
         return
 
     logger.info(msg)
-
-    if retry != 0:
-        await provider.send_report(msg)
+    await provider.send_report(msg)
 
 
 async def scheduler():
