@@ -21,6 +21,9 @@ retry = 0
 
 
 async def health_check():
+    if not CHECK_URL:
+        raise
+
     global retry
     response = requests.get(CHECK_URL)
     logger.info(response.status_code)
@@ -40,10 +43,15 @@ async def health_check():
         return
 
     logger.info(msg)
-    await provider.send_report(msg)
+
+    if retry != 0:
+        await provider.send_report(msg)
 
 
 async def scheduler():
+    if not UPDATE_CHECK_SECONDS:
+        raise
+
     while True:
         await asyncio.sleep(
             timedelta(seconds=float(UPDATE_CHECK_SECONDS)).total_seconds()
@@ -58,4 +66,4 @@ if __name__ == "__main__":
     asyncio.run(scheduler())
 
     if TG_PROVIDER:
-        provider.application.run_polling()
+        provider.application.run_polling()  # type: ignore
